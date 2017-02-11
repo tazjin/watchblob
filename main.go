@@ -4,10 +4,11 @@ import (
 	"bufio"
 	"encoding/xml"
 	"fmt"
+	"golang.org/x/crypto/ssh/terminal"
 	"net/http"
 	"os"
 	"strings"
-	"golang.org/x/crypto/ssh/terminal"
+	"syscall"
 )
 
 // The XML response returned by the WatchGuard server
@@ -60,7 +61,7 @@ func readCredentials() (string, string, error) {
 	username, err := reader.ReadString('\n')
 
 	fmt.Printf("Password: ")
-	password, err := terminal.ReadPassword(1)
+	password, err := terminal.ReadPassword(syscall.Stdin)
 
 	// If an error occured, I don't care about which one it is.
 	return strings.TrimSpace(username), strings.TrimSpace(string(password)), err
