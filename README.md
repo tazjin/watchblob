@@ -10,8 +10,10 @@ OpenVPN protocol, which makes it impossible to start those connections solely by
 using the `openvpn` CLI and configuration files.
 
 What this application does has been reverse-engineered from the "WatchGuard Mobile VPN
-with SSL" application on OS X. A writeup of the protocol and the security implications
-will be linked here in the future.
+with SSL" application on OS X.
+
+I've published a [blog post](https://www.tazj.in/en/1486830338) describing the process
+and what is actually going on in this protocol.
 
 ## Installation
 

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestUnmarhshalChallengeRespones(t *testing.T) {
+func TestUnmarshalChallengeRespones(t *testing.T) {
 	var testXml string = `
 <?xml version="1.0" encoding="UTF-8"?>
 <resp>
