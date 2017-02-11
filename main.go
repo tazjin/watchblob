@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 // The XML response returned by the WatchGuard server
@@ -21,16 +22,20 @@ type Resp struct {
 func main() {
 	args := os.Args[1:]
 
-	if len(args) != 3 {
-		fmt.Fprintf(os.Stderr, "Usage: watchblob <vpn-host> <username> <password>\n")
+	if len(args) != 1 {
+		fmt.Fprintln(os.Stderr, "Usage: watchblob <vpn-host>")
 		os.Exit(1)
 	}
 
 	host := args[0]
-	username := args[1]
-	password := args[2]
 
-	challenge, err := triggerChallengeResponse(&host, &username, &password)
+	username, password, err := readCredentials()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not read credentials: %v\n", err)
+	}
+
+	fmt.Println("Requesting challenge from %s as user %s\n", host, *username)
+	challenge, err := triggerChallengeResponse(&host, username, password)
 
 	if err != nil || challenge.LogonStatus != 4 {
 		fmt.Fprintln(os.Stderr, "Did not receive challenge from server")
@@ -47,6 +52,19 @@ func main() {
 	}
 
 	fmt.Printf("Login succeeded, you may now (quickly) authenticate OpenVPN with %d as your password\n", token)
+}
+
+func readCredentials() (*string, *string, error) {
+	fmt.Printf("Username: ")
+	reader := bufio.NewReader(os.Stdin)
+	username, err := reader.ReadString('\n')
+
+	fmt.Printf("Password: ")
+	passwordBytes, err := terminal.ReadPassword(1)
+	password := string(passwordBytes)
+
+	// If an error occured, I don't care about which one it is.
+	return &username, &password, err
 }
 
 func triggerChallengeResponse(host *string, username *string, password *string) (r Resp, err error) {

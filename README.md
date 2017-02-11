@@ -16,7 +16,7 @@ will be linked here in the future.
 ## Installation
 
 Make sure you have Go installed and `GOPATH` configured, then simply
-`go get github.com/tazjin/watchblob`.
+`go get github.com/tazjin/watchblob/...`.
 
 ## Usage
 
