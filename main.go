@@ -34,8 +34,8 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Could not read credentials: %v\n", err)
 	}
 
-	fmt.Println("Requesting challenge from %s as user %s\n", host, *username)
-	challenge, err := triggerChallengeResponse(&host, username, password)
+	fmt.Println("Requesting challenge from %s as user %s\n", host, username)
+	challenge, err := triggerChallengeResponse(&host, &username, &password)
 
 	if err != nil || challenge.LogonStatus != 4 {
 		fmt.Fprintln(os.Stderr, "Did not receive challenge from server")
@@ -54,17 +54,16 @@ func main() {
 	fmt.Printf("Login succeeded, you may now (quickly) authenticate OpenVPN with %d as your password\n", token)
 }
 
-func readCredentials() (*string, *string, error) {
+func readCredentials() (string, string, error) {
 	fmt.Printf("Username: ")
 	reader := bufio.NewReader(os.Stdin)
 	username, err := reader.ReadString('\n')
 
 	fmt.Printf("Password: ")
-	passwordBytes, err := terminal.ReadPassword(1)
-	password := string(passwordBytes)
+	password, err := terminal.ReadPassword(1)
 
 	// If an error occured, I don't care about which one it is.
-	return &username, &password, err
+	return strings.TrimSpace(username), strings.TrimSpace(string(password)), err
 }
 
 func triggerChallengeResponse(host *string, username *string, password *string) (r Resp, err error) {
