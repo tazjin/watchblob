@@ -35,7 +35,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Could not read credentials: %v\n", err)
 	}
 
-	fmt.Println("Requesting challenge from %s as user %s\n", host, username)
+	fmt.Printf("Requesting challenge from %s as user %s\n", host, username)
 	challenge, err := triggerChallengeResponse(&host, &username, &password)
 
 	if err != nil || challenge.LogonStatus != 4 {
@@ -52,7 +52,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Login succeeded, you may now (quickly) authenticate OpenVPN with %d as your password\n", token)
+	fmt.Printf("Login succeeded, you may now (quickly) authenticate OpenVPN with %s as your password\n", token)
 }
 
 func readCredentials() (string, string, error) {
