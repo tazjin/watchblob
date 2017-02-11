@@ -46,7 +46,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("Login succeeded, you may now (quickly) authenticate OpenVPN with %s as your password", token)
+	fmt.Printf("Login succeeded, you may now (quickly) authenticate OpenVPN with %d as your password\n", token)
 }
 
 func triggerChallengeResponse(host *string, username *string, password *string) (r Resp, err error) {
@@ -76,7 +76,6 @@ func logon(host *string, challenge *Resp, token *string) (err error) {
 }
 
 func request(url string) (r Resp, err error) {
-	fmt.Println(url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return
