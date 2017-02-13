@@ -1,19 +1,37 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/url"
+	"strconv"
+)
 
 const urlFormat string = "https://%s%s"
-const triggerChallengeUri = "/?action=sslvpn_logon&fw_username=%s&fw_password=%s&style=fw_logon_progress.xsl&fw_logon_type=logon&fw_domain=Firebox-DB"
-const responseUri = "/?action=sslvpn_logon&style=fw_logon_progress.xsl&fw_logon_type=response&response=%s&fw_logon_id=%d"
+const uriFormat = "/?%s"
 
 func templateChallengeTriggerUri(username *string, password *string) string {
-	return fmt.Sprintf(triggerChallengeUri, *username, *password)
+	v := url.Values{}
+	v.Set("action", "sslvpn_logon")
+	v.Set("style", "fw_logon_progress.xsl")
+	v.Set("fw_logon_type", "logon")
+	v.Set("fw_domain", "Firebox-DB")
+	v.Set("fw_username", *username)
+	v.Set("fw_password", *password)
+
+	return fmt.Sprintf(uriFormat, v.Encode())
 }
 
 func templateResponseUri(logonId int, token *string) string {
-	return fmt.Sprintf(responseUri, *token, logonId)
+	v := url.Values{}
+	v.Set("action", "sslvpn_logon")
+	v.Set("style", "fw_logon_progress.xsl")
+	v.Set("fw_logon_type", "response")
+	v.Set("response", *token)
+	v.Set("fw_logon_id", strconv.Itoa(logonId))
+
+	return fmt.Sprintf(uriFormat, v.Encode())
 }
 
 func templateUrl(baseUrl *string, uri string) string {
-	return fmt.Sprintf("https://%s%s", *baseUrl, uri)
+	return fmt.Sprintf(urlFormat, *baseUrl, uri)
 }
