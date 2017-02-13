@@ -62,6 +62,7 @@ func readCredentials() (string, string, error) {
 
 	fmt.Printf("Password: ")
 	password, err := terminal.ReadPassword(syscall.Stdin)
+	fmt.Println()
 
 	// If an error occured, I don't care about which one it is.
 	return strings.TrimSpace(username), strings.TrimSpace(string(password)), err
